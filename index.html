@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aayush Singh — Freelance Video Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --accent: #ff3c00;
+    --accent2: #ffb800;
+    --text: #f0ece4;
+    --muted: #666;
+    --border: #222;
+    --font-display: 'Bebas Neue', cursive;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,60,0,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+  }
+  body:hover .cursor { transform: scale(1); }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9997;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent);
+    color: white !important;
+    padding: 10px 22px;
+    font-size: 10px !important;
+    letter-spacing: 2px !important;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: #cc3000 !important; color: white !important; }
+
+  /* HERO */
+  #home {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(255,60,0,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 20% 80%, rgba(255,184,0,0.05) 0%, transparent 50%),
+      #0a0a0a;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    position: relative;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--accent);
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(80px, 14vw, 200px);
+    line-height: 0.88;
+    letter-spacing: -2px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-title .line2 { 
+    -webkit-text-stroke: 1px rgba(240,236,228,0.3);
+    color: transparent;
+    display: block;
+  }
+  .hero-title .accent { color: var(--accent); }
+  .hero-sub {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 40px; position: relative; z-index: 2;
+  }
+  .hero-desc {
+    max-width: 380px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #999;
+    font-weight: 300;
+  }
+  .hero-stats { display: flex; gap: 50px; }
+  .stat-item { text-align: right; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--accent); }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .hero-scroll {
+    position: absolute; right: 60px; bottom: 80px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; writing-mode: vertical-rl;
+  }
+  .hero-scroll::after {
+    content: ''; width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50% { opacity: 0.3; transform: scaleY(0.5); }
+  }
+
+  /* SECTIONS */
+  section { padding: 120px 60px; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before {
+    content: attr(data-num);
+    font-size: 9px;
+    color: var(--muted);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 6vw, 90px);
+    line-height: 0.92;
+    letter-spacing: 1px;
+    margin-bottom: 60px;
+  }
+
+  /* WORKS */
+  #works { background: var(--bg); }
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+  }
+  .work-item {
+    background: var(--surface);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+  }
+  .work-item:hover { border-color: var(--accent); }
+  .work-item:nth-child(1) { grid-column: span 7; grid-row: span 2; }
+  .work-item:nth-child(2) { grid-column: span 5; }
+  .work-item:nth-child(3) { grid-column: span 5; }
+  .work-item:nth-child(4) { grid-column: span 4; }
+  .work-item:nth-child(5) { grid-column: span 4; }
+  .work-item:nth-child(6) { grid-column: span 4; }
+  .work-thumb {
+    width: 100%; aspect-ratio: 16/9;
+    background: var(--surface2);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .work-item:nth-child(1) .work-thumb { aspect-ratio: unset; height: 380px; }
+  .work-thumb-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.6s ease;
+  }
+  .work-item:hover .work-thumb-bg { transform: scale(1.05); }
+  .work-play {
+    width: 60px; height: 60px;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; z-index: 2;
+    transition: all 0.3s;
+  }
+  .work-item:hover .work-play {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.1);
+  }
+  .work-play svg { fill: white; margin-left: 4px; }
+  .work-type-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(10,10,10,0.8);
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--accent2); letter-spacing: 2px;
+    padding: 4px 10px; text-transform: uppercase;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,184,0,0.3);
+  }
+  .work-info { padding: 16px 20px 20px; }
+  .work-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .work-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+
+  /* Upload placeholder styling */
+  .upload-placeholder {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--surface2),
+      var(--surface2) 10px,
+      var(--surface) 10px,
+      var(--surface) 20px
+    );
+  }
+  .c1 { background: linear-gradient(135deg, #1a0a00, #330d00); }
+  .c2 { background: linear-gradient(135deg, #0d1a00, #1a3300); }
+  .c3 { background: linear-gradient(135deg, #00071a, #001433); }
+  .c4 { background: linear-gradient(135deg, #1a001a, #330033); }
+  .c5 { background: linear-gradient(135deg, #1a1000, #332000); }
+  .c6 { background: linear-gradient(135deg, #001a1a, #003333); }
+
+  /* Add Work button */
+  .add-work-btn {
+    margin-top: 40px;
+    display: inline-flex; align-items: center; gap: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 14px 28px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .add-work-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* CLIENTS */
+  #clients { background: var(--surface); border-top: 1px solid var(--border); }
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 80px;
+  }
+  .client-card {
+    background: var(--bg);
+    padding: 36px 32px;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .client-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .client-card:hover::before { transform: scaleX(1); }
+  .client-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .client-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 20px;
+    color: var(--text); margin-bottom: 16px;
+    border: 2px solid var(--border);
+  }
+  .client-name { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
+  .client-company { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-bottom: 16px; }
+  .stars { color: var(--accent2); font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+  .client-review { font-size: 13px; line-height: 1.7; color: #888; font-weight: 300; font-style: italic; }
+  .client-project {
+    margin-top: 16px;
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--accent); letter-spacing: 2px;
+    text-transform: uppercase;
+    padding-top: 16px; border-top: 1px solid var(--border);
+  }
+
+  /* BOOKING */
+  #booking { background: var(--bg); }
+  .booking-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  }
+  .booking-info h3 {
+    font-family: var(--font-display); font-size: 28px; margin-bottom: 24px;
+    color: var(--text);
+  }
+  .service-list { list-style: none; margin-bottom: 40px; }
+  .service-list li {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .service-list li:first-child { border-top: 1px solid var(--border); }
+  .service-name { display: flex; align-items: center; gap: 10px; }
+  .service-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+  .service-price {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--accent2);
+    background: rgba(255,184,0,0.08);
+    padding: 4px 10px;
+  }
+  .booking-form { background: var(--surface); border: 1px solid var(--border); padding: 40px; }
+  .form-title {
+    font-family: var(--font-display); font-size: 22px;
+    margin-bottom: 30px; color: var(--text);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-body); font-size: 14px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
+  .form-group textarea { height: 100px; resize: none; }
+  .form-group select { cursor: pointer; }
+  .btn-submit {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 3px; text-transform: uppercase;
+    padding: 16px;
+    cursor: pointer;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: background 0.2s;
+    margin-top: 8px;
+  }
+  .btn-submit:hover { background: #e63600; }
+
+  /* PAYMENT */
+  #payment { background: var(--surface); border-top: 1px solid var(--border); }
+  .payment-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-bottom: 60px;
+  }
+  .payment-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 36px 30px;
+    position: relative;
+    transition: border-color 0.3s;
+    cursor: pointer;
+  }
+  .payment-card.featured {
+    border-color: var(--accent);
+  }
+  .payment-card.featured::after {
+    content: 'POPULAR';
+    position: absolute; top: -1px; right: 24px;
+    background: var(--accent);
+    font-family: var(--font-mono); font-size: 8px; letter-spacing: 2px;
+    color: white; padding: 4px 10px;
+  }
+  .payment-card:hover { border-color: var(--accent); }
+  .plan-name {
+    font-family: var(--font-display); font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .plan-price {
+    font-family: var(--font-display); font-size: 56px;
+    color: var(--accent); line-height: 1;
+    margin-bottom: 4px;
+  }
+  .plan-price span { font-size: 20px; color: var(--muted); }
+  .plan-desc { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+  .plan-features { list-style: none; margin-bottom: 30px; }
+  .plan-features li {
+    font-size: 13px; padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    color: #aaa;
+  }
+  .plan-features li::before { content: '→'; color: var(--accent); font-size: 11px; }
+  .btn-plan {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .payment-card.featured .btn-plan {
+    background: var(--accent); border-color: var(--accent); color: white;
+  }
+  .btn-plan:hover { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .payment-methods {
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    padding: 24px 30px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+  .payment-methods-label {
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase; margin-right: 10px;
+  }
+  .payment-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--text); letter-spacing: 1px;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--bg); }
+  .contact-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  }
+  .contact-info h3 {
+    font-family: var(--font-display); font-size: 32px;
+    margin-bottom: 16px;
+  }
+  .contact-info p { font-size: 15px; color: #888; line-height: 1.7; margin-bottom: 40px; }
+  .contact-details { list-style: none; margin-bottom: 40px; }
+  .contact-details li {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .contact-icon {
+    width: 36px; height: 36px;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 14px;
+  }
+  .contact-detail-label {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .contact-detail-val { font-size: 14px; color: var(--text); }
+  .contact-detail-val a { color: var(--text); text-decoration: none; }
+  .contact-detail-val a:hover { color: var(--accent); }
+
+  .social-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .social-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text); text-decoration: none;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 1px; padding: 10px 16px;
+    transition: all 0.3s;
+  }
+  .social-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .social-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* CONTACT FORM */
+  .contact-form { background: var(--surface); border: 1px solid var(--border); padding: 40px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 40px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo {
+    font-family: var(--font-display); font-size: 20px;
+    letter-spacing: 3px; color: var(--text); text-decoration: none;
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); letter-spacing: 1px;
+  }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); text-decoration: none; letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px; max-width: 500px; width: 90%;
+    position: relative;
+    animation: modalIn 0.3s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--muted);
+    font-size: 20px; cursor: pointer; transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--accent); }
+  .modal-title { font-family: var(--font-display); font-size: 28px; margin-bottom: 16px; }
+  .modal-body { font-size: 14px; color: #888; line-height: 1.7; }
+  .modal-success { color: #4caf50; font-family: var(--font-mono); font-size: 12px; margin-top: 16px; display: none; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up {
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+  .delay-1 { animation-delay: 0.2s; }
+  .delay-2 { animation-delay: 0.4s; }
+  .delay-3 { animation-delay: 0.6s; }
+  .delay-4 { animation-delay: 0.8s; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    #home { padding: 0 24px 60px; }
+    .hero-title { font-size: clamp(60px, 18vw, 120px); }
+    .hero-sub { flex-direction: column; gap: 30px; align-items: flex-start; }
+    .hero-stats { gap: 30px; }
+    .works-grid { grid-template-columns: 1fr; }
+    .work-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+    .work-item:nth-child(1) .work-thumb { height: auto; }
+    .clients-grid { grid-template-columns: 1fr; }
+    .booking-layout { grid-template-columns: 1fr; gap: 40px; }
+    .form-row { grid-template-columns: 1fr; }
+    .payment-cards { grid-template-columns: 1fr; }
+    .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+  }
+
+  /* Smooth nav highlight */
+  .nav-links a.active { color: var(--accent); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 1px; padding: 14px 28px;
+    z-index: 9999;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">AAYUSH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#works">Works</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#booking">Services</a></li>
+    <li><a href="#payment">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#booking" class="nav-cta">Book Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-eyebrow fade-up">Freelance Video Editor</div>
+  <h1 class="hero-title fade-up delay-1">
+    AAYUSH<br>
+    <span class="line2">SINGH<span class="accent">.</span></span>
+  </h1>
+  <div class="hero-sub fade-up delay-2">
+    <p class="hero-desc">
+      Crafting visual stories that move people. From brand films to reels — every frame tells your story with precision, rhythm, and emotion.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">48<span>+</span></div>
+        <div class="stat-label">Projects Done</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">32<span>+</span></div>
+        <div class="stat-label">Happy Clients</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.3<span>★</span></div>
+        <div class="stat-label">Avg Rating</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">scroll</div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="section-label" data-num="01">Portfolio</div>
+  <h2 class="section-title">MY<br>WORKS<span style="color:var(--accent)">.</span></h2>
+
+  <div class="works-grid">
+    <!-- Item 1 — Large Featured -->
+    <div class="work-item" onclick="openWorkModal('Brand Film — XYZ Studio', 'Commercial brand film with cinematic color grade and dynamic motion graphics. Full production workflow from rough cut to final delivery.', 'Commercial')">
+      <div class="work-thumb">
+        <div class="work-thumb-bg c1"></div>
+        <div class="work-type-badge">🎬 Brand Film</div>
+        <!-- Replace the div below with: <video src="your-video.mp4" controls style="width:100%;height:100%;object-fit:cover"></video> -->
+        <div class="work-play">
+          <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-title">XYZ Studio — Brand Film 2024</div>
+        <div class="work-meta">COMMERCIAL · 4K · COLOR GRADE · MOTION GRAPHICS</div>
+      </div>
+    </div>
+
+    <!-- Item 2 -->
+    <div class="work-item" onclick="openWorkModal('YouTube Series Edit', 'Long-form YouTube content with chapter markers, animated titles, and podcast-style audio mix.', 'YouTube')">
+      <div class="work-thumb">
+        <div class="work-thumb-bg c2"></div>
+        <div class="work-type-badge">📺 YouTube</div>
+        <div class="work-play" style="width:44px;height:44px">
+          <svg width="12" height="14" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-title">Creator Series — Episode Pack</div>
+        <div class="work-meta">YOUTUBE · LONG FORM · AUDIO MIX</div>
+      </div>
+    </div>
+
+    <!-- Item 3 -->
+    <div class="work-item" onclick="openWorkModal('Instagram Reel Package', '15 short-form reels edited for maximum retention with trending audio and text animations.', 'Social Media')">
+      <div class="work-thumb">
+        <div class="work-thumb-bg c3"></div>
+        <div class="work-type-badge">📱 Social Media</div>
+        <div class="work-play" style="width:44px;height:44px">
+          <svg width="12" height="14" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-title">Instagram Reels — Fashion Brand</div>
+        <div class="work-meta">REELS · SHORT FORM · 9:16</div>
+      </div>
+    </div>
+
+    <!-- Items 4, 5, 6 -->
+    <div class="work-item" onclick="openWorkModal('Wedding Highlight Film', 'Cinematic wedding highlight with song-synced cuts and emotional storytelling.', 'Wedding')">
+      <div class="work-thumb"><div class="work-thumb-bg c4"></div><div class="work-type-badge">💍 Wedding</div><div class="work-play" style="width:40px;height:40px"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div></div>
+      <div class="work-info"><div class="work-title">Wedding Highlights 2024</div><div class="work-meta">CINEMATIC · 4K · COLOR</div></div>
+    </div>
+    <div class="work-item" onclick="openWorkModal('Product Ad — E-Commerce', 'Fast-paced product showcase with 3D text transitions for e-commerce brand launch.', 'Commercial')">
+      <div class="work-thumb"><div class="work-thumb-bg c5"></div><div class="work-type-badge">🛍️ Ad</div><div class="work-play" style="width:40px;height:40px"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div></div>
+      <div class="work-info"><div class="work-title">Product Launch Ad</div><div class="work-meta">COMMERCIAL · MOTION · FAST CUTS</div></div>
+    </div>
+    <div class="work-item" onclick="openWorkModal('Music Video Edit', 'Concept music video with synchronized cuts, color manipulation, and VFX overlays.', 'Music')">
+      <div class="work-thumb"><div class="work-thumb-bg c6"></div><div class="work-type-badge">🎵 Music Video</div><div class="work-play" style="width:40px;height:40px"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div></div>
+      <div class="work-info"><div class="work-title">Music Video — Artist Collab</div><div class="work-meta">MUSIC VIDEO · VFX · COLOR GRADE</div></div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:50px">
+    <p style="font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:20px">
+      ↑ REPLACE PLACEHOLDER COLORS WITH YOUR ACTUAL VIDEO THUMBNAILS OR EMBEDS ↑
+    </p>
+    <button class="add-work-btn" onclick="showToast('To add work: replace .work-thumb div with your video embed or image tag')">
+      + ADD MORE WORK
+    </button>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section id="clients">
+  <div class="section-label" data-num="02">Testimonials</div>
+  <h2 class="section-title">CLIENT<br>REVIEWS<span style="color:var(--accent)">.</span></h2>
+
+  <div class="clients-grid">
+
+    <div class="client-card">
+      <div class="client-avatar">A</div>
+      <div class="client-name">Aryan Mehta</div>
+      <div class="client-company">CEO · BrandWave Agency</div>
+      <div class="stars">★★★★★</div>
+      <p class="client-review">"Absolutely transformed our brand film. The color grading was cinematic, delivery was on time, and the communication was top-notch. Will hire again without hesitation."</p>
+      <div class="client-project">PROJECT: Brand Campaign 2024</div>
+    </div>
+
+    <div class="client-card">
+      <div class="client-avatar">S</div>
+      <div class="client-name">Sneha Kapoor</div>
+      <div class="client-company">Content Creator · 1.2M Followers</div>
+      <div class="stars">★★★★★</div>
+      <p class="client-review">"My YouTube views doubled after getting my videos edited here. The pacing, the hooks, the thumbnails — everything was exactly what I needed to grow my channel."</p>
+      <div class="client-project">PROJECT: YouTube Series (12 Episodes)</div>
+    </div>
+
+    <div class="client-card">
+      <div class="client-avatar">R</div>
+      <div class="client-name">Rohan Sharma</div>
+      <div class="client-company">Founder · StyleCo Fashion</div>
+      <div class="stars">★★★★★</div>
+      <p class="client-review">"Our Instagram reels went viral after this collaboration. Quick turnaround, understood our brand aesthetic immediately, and the final product exceeded every expectation."</p>
+      <div class="client-project">PROJECT: 20 Instagram Reels</div>
+    </div>
+
+    <div class="client-card">
+      <div class="client-avatar">P</div>
+      <div class="client-name">Priya Nair</div>
+      <div class="client-company">Bride · Wedding Film</div>
+      <div class="stars">★★★★★</div>
+      <p class="client-review">"I cried watching my wedding highlight film. Every moment was captured so beautifully. The music sync, the emotions — I'll treasure this video forever."</p>
+      <div class="client-project">PROJECT: Wedding Highlight Film</div>
+    </div>
+
+    <div class="client-card">
+      <div class="client-avatar">K</div>
+      <div class="client-name">Kunal Verma</div>
+      <div class="client-company">Marketing Head · TechStart</div>
+      <div class="stars">★★★★★</div>
+      <p class="client-review">"Our product launch ad got 500K views in the first week. The fast cuts and motion graphics were exactly on trend. Professional, creative, and reliable."</p>
+      <div class="client-project">PROJECT: Product Launch Campaign</div>
+    </div>
+
+    <div class="client-card">
+      <div class="client-avatar">D</div>
+      <div class="client-name">Divya Singh</div>
+      <div class="client-company">Independent Musician</div>
+      <div class="stars">★★★★☆</div>
+      <p class="client-review">"The music video edit was creative and unique. Great understanding of the mood I wanted. The VFX work was impressive for the budget. Highly recommend for music artists."</p>
+      <div class="client-project">PROJECT: Music Video — Official</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="section-label" data-num="03">Services</div>
+  <h2 class="section-title">BOOK A<br>PROJECT<span style="color:var(--accent)">.</span></h2>
+
+  <div class="booking-layout">
+    <div class="booking-info">
+      <h3>What I Offer</h3>
+      <ul class="service-list">
+        <li><span class="service-name"><span class="service-dot"></span>YouTube / Long-Form Editing</span><span class="service-price">FROM ₹2,000</span></li>
+        <li><span class="service-name"><span class="service-dot"></span>Instagram Reels / Shorts</span><span class="service-price">FROM ₹500</span></li>
+        <li><span class="service-name"><span class="service-dot"></span>Brand / Commercial Film</span><span class="service-price">FROM ₹8,000</span></li>
+        <li><span class="service-name"><span class="service-dot"></span>Wedding Highlight Film</span><span class="service-price">FROM ₹5,000</span></li>
+        <li><span class="service-name"><span class="service-dot"></span>Product Ad / Promo Video</span><span class="service-price">FROM ₹3,000</span></li>
+        <li><span class="service-name"><span class="service-dot"></span>Color Grading Only</span><span class="service-price">FROM ₹1,500</span></li>
+        <li><span class="service-name"><span class="service-dot"></span>Motion Graphics / Titles</span><span class="service-price">FROM ₹2,500</span></li>
+        <li><span class="service-name"><span class="service-dot"></span>Music Video Edit</span><span class="service-price">FROM ₹4,000</span></li>
+      </ul>
+
+      <div style="background:var(--surface);border:1px solid var(--border);padding:24px;margin-top:20px">
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--accent);letter-spacing:3px;margin-bottom:12px">TURNAROUND TIME</div>
+        <p style="font-size:13px;color:#888;line-height:1.7">
+          Standard delivery: <strong style="color:var(--text)">3–5 business days</strong><br>
+          Rush delivery (24–48hrs): <strong style="color:var(--accent2)">+50% surcharge</strong><br>
+          Revisions included: <strong style="color:var(--text)">2 rounds</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="booking-form">
+      <div class="form-title">Send a Brief</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name *</label>
+          <input type="text" placeholder="Full name" id="book-name">
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" placeholder="your@email.com" id="book-email">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone / WhatsApp</label>
+          <input type="tel" placeholder="+91 87657 63039" id="book-phone">
+        </div>
+        <div class="form-group">
+          <label>Service Needed *</label>
+          <select id="book-service">
+            <option value="">Select service...</option>
+            <option>YouTube / Long-Form Editing</option>
+            <option>Instagram Reels / Shorts</option>
+            <option>Brand / Commercial Film</option>
+            <option>Wedding Highlight Film</option>
+            <option>Product Ad / Promo Video</option>
+            <option>Color Grading Only</option>
+            <option>Motion Graphics / Titles</option>
+            <option>Music Video Edit</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Budget Range</label>
+          <select id="book-budget">
+            <option value="">Select budget...</option>
+            <option>Under ₹2,000</option>
+            <option>₹2,000 – ₹5,000</option>
+            <option>₹5,000 – ₹10,000</option>
+            <option>₹10,000 – ₹25,000</option>
+            <option>₹25,000+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Deadline</label>
+          <input type="date" id="book-deadline">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Project Brief *</label>
+        <textarea placeholder="Describe your project, reference videos, style preferences, number of videos, raw footage duration..." id="book-brief"></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitBooking()">→ SUBMIT BOOKING REQUEST</button>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<section id="payment">
+  <div class="section-label" data-num="04">Pricing</div>
+  <h2 class="section-title">PAYMENT<br>PLANS<span style="color:var(--accent)">.</span></h2>
+
+  <div class="payment-cards">
+    <div class="payment-card">
+      <div class="plan-name">STARTER</div>
+      <div class="plan-price">₹<span style="font-size:36px;color:var(--text)">999</span></div>
+      <div class="plan-desc">/ per reel or short video</div>
+      <ul class="plan-features">
+        <li>1 Reel or Short (up to 60s)</li>
+        <li>Basic Color Correction</li>
+        <li>Text Animations</li>
+        <li>2 Rounds of Revisions</li>
+        <li>Delivery in 2–3 Days</li>
+        <li>1080p Export</li>
+      </ul>
+      <button class="btn-plan" onclick="selectPlan('STARTER — ₹999')">SELECT PLAN</button>
+    </div>
+
+    <div class="payment-card featured">
+      <div class="plan-name">PRO</div>
+      <div class="plan-price">₹<span style="font-size:36px;color:var(--text)">4,999</span></div>
+      <div class="plan-desc">/ per video (5–20 mins)</div>
+      <ul class="plan-features">
+        <li>Long-Form Video Edit</li>
+        <li>Cinematic Color Grade</li>
+        <li>Custom Motion Graphics</li>
+        <li>Audio Mix & Mastering</li>
+        <li>3 Rounds of Revisions</li>
+        <li>4K Export + Source File</li>
+        <li>Priority Delivery (3 Days)</li>
+      </ul>
+      <button class="btn-plan" onclick="selectPlan('PRO — ₹4,999')">SELECT PLAN</button>
+    </div>
+
+    <div class="payment-card">
+      <div class="plan-name">BRAND</div>
+      <div class="plan-price">₹<span style="font-size:36px;color:var(--text)">14,999</span></div>
+      <div class="plan-desc">/ full campaign package</div>
+      <ul class="plan-features">
+        <li>1 Brand / Commercial Film</li>
+        <li>5 Social Media Cuts</li>
+        <li>Full Color Suite</li>
+        <li>VFX & Visual Effects</li>
+        <li>Unlimited Revisions</li>
+        <li>4K + All Formats Delivered</li>
+        <li>Dedicated Project Manager</li>
+      </ul>
+      <button class="btn-plan" onclick="selectPlan('BRAND — ₹14,999')">SELECT PLAN</button>
+    </div>
+  </div>
+
+  <div class="payment-methods">
+    <span class="payment-methods-label">Payment via:</span>
+    <span class="payment-badge">🏦 Bank Transfer</span>
+    <span class="payment-badge">📲 PhonePe</span>
+    <span class="payment-badge">💰 50% Advance</span>
+    <a href="https://paypal.me/vanraj015" target="_blank" class="payment-badge" style="text-decoration:none;color:var(--text)">🅿️ PayPal</a>
+  </div>
+
+  <div style="margin-top:24px;padding:20px 30px;background:var(--bg);border:1px solid var(--border);display:flex;gap:40px;flex-wrap:wrap">
+    <div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">PAYMENT TERMS</div>
+      <p style="font-size:13px;color:#888">50% advance before work begins · 50% on final delivery</p>
+    </div>
+    <div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">REFUND POLICY</div>
+      <p style="font-size:13px;color:#888">Full refund if work not started · No refund after delivery</p>
+    </div>
+    <div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:6px">REVISIONS</div>
+      <p style="font-size:13px;color:#888">Revisions within scope · Extra revisions charged separately</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label" data-num="05">Get In Touch</div>
+  <h2 class="section-title">LET'S<br>CONNECT<span style="color:var(--accent)">.</span></h2>
+
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h3>Open for Projects</h3>
+      <p>Whether you have a full brief or just an idea — reach out. I respond within 24 hours. Let's make something great together.</p>
+
+      <ul class="contact-details">
+        <li>
+          <div class="contact-icon">📧</div>
+          <div>
+            <div class="contact-detail-label">Email</div>
+            <div class="contact-detail-val"><a href="mailto:vanrajyadav493@gmail.com">vanrajyadav493@gmail.com</a></div>
+          </div>
+        </li>
+        <li>
+          <div class="contact-icon">📱</div>
+          <div>
+            <div class="contact-detail-label">WhatsApp / Phone</div>
+            <div class="contact-detail-val"><a href="https://wa.me/918765763039">+91 87657 63039</a></div>
+          </div>
+        </li>
+        <li>
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-detail-label">Based In</div>
+            <div class="contact-detail-val">Varanasi, Uttar Pradesh, India</div>
+          </div>
+        </li>
+        <li>
+          <div class="contact-icon">⏰</div>
+          <div>
+            <div class="contact-detail-label">Working Hours</div>
+            <div class="contact-detail-val">Mon–Sat, 9:00 AM – 8:00 PM IST</div>
+          </div>
+        </li>
+      </ul>
+
+      <!-- SOCIAL HANDLES -->
+      <div style="margin-bottom:12px;font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:3px">FIND ME ON</div>
+      <div class="social-row">
+        <a href="https://instagram.com/vanrajyadav" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+        <a href="https://youtube.com/@vanrajyadav" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+          YouTube
+        </a>
+        <a href="https://linkedin.com/in/vanrajyadav" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://twitter.com/vanrajyadav" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Twitter / X
+        </a>
+        <a href="https://behance.net/vanrajyadav" target="_blank" class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029H23.7zM13 17.549c.086-3.539 3.489-3.539 3.641-1.569H13zm-2.818 6.451H7.293V3.2H13c1.917 0 5.73.691 5.73 4.471 0 1.903-1.049 2.981-2.344 3.64C17.924 11.876 19 13.079 19 15.187c0 4.736-4.765 4.813-5.773 4.813H10.182zm-3.068-8.463H12.7c1.979 0 3.2-.688 3.2-2.478 0-1.912-1.31-2.467-3.342-2.467H7.113v4.945zm0 5.812h5.406c2.126 0 3.73-.647 3.73-2.787 0-2.087-1.637-2.701-3.856-2.701H7.113v5.488z"/></svg>
+          Behance
+        </a>
+        <a href="https://wa.me/918765763039" target="_blank" class="social-btn" style="border-color:rgba(37,211,102,0.3);color:#25d366">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form">
+      <div class="form-title">Send a Message</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" placeholder="Your name" id="c-name">
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" placeholder="your@email.com" id="c-email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" placeholder="What's it about?" id="c-subject">
+      </div>
+      <div class="form-group">
+        <label>Message *</label>
+        <textarea placeholder="Tell me about your project, collaboration idea, or just say hi..." id="c-message" style="height:140px"></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitContact()">→ SEND MESSAGE</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#home" class="footer-logo">AAYUSH<span>.</span></a>
+  <div class="footer-copy">© 2025 Aayush Singh · All Rights Reserved · Made with ❤️ in India</div>
+  <div class="footer-links">
+    <a href="#works">Works</a>
+    <a href="#booking">Book</a>
+    <a href="#payment">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="workModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title">Project Title</div>
+    <div style="font-family:var(--font-mono);font-size:9px;color:var(--accent);letter-spacing:3px;margin-bottom:16px" id="modal-type">TYPE</div>
+    <div class="modal-body" id="modal-body">Description</div>
+    <div style="margin-top:24px;display:flex;gap:12px">
+      <button class="btn-submit" style="width:auto;padding:12px 28px;clip-path:none" onclick="closeModal(); document.getElementById('booking').scrollIntoView({behavior:'smooth'})">BOOK SIMILAR PROJECT</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLAN MODAL -->
+<div class="modal-overlay" id="planModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('planModal').classList.remove('active')">✕</button>
+    <div class="modal-title" id="plan-modal-title">Plan Selected</div>
+    <div class="modal-body">
+      Great choice! To proceed, please fill out the booking form below with your project details, or reach out directly via WhatsApp or email. I'll send you the payment details after confirming your project scope.
+      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+        <a href="https://wa.me/918765763039" target="_blank" style="background:var(--accent);color:white;font-family:var(--font-mono);font-size:10px;letter-spacing:2px;padding:12px 20px;text-decoration:none;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)">WHATSAPP ME</a>
+        <button class="btn-submit" style="width:auto;padding:12px 20px;clip-path:none" onclick="document.getElementById('planModal').classList.remove('active'); document.getElementById('booking').scrollIntoView({behavior:'smooth'})">FILL BOOKING FORM</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX - 6 + 'px';
+    cursor.style.top = e.clientY - 6 + 'px';
+    ring.style.left = e.clientX - 18 + 'px';
+    ring.style.top = e.clientY - 18 + 'px';
+  });
+  document.querySelectorAll('a, button, .work-item, .client-card, .payment-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
+  });
+
+  // Active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.getAttribute('id'); });
+    navLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  });
+
+  // Work modal
+  function openWorkModal(title, desc, type) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-body').textContent = desc;
+    document.getElementById('modal-type').textContent = type;
+    document.getElementById('workModal').classList.add('active');
+  }
+  function closeModal() { document.getElementById('workModal').classList.remove('active'); }
+  document.getElementById('workModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+  // Plan select
+  function selectPlan(plan) {
+    document.getElementById('plan-modal-title').textContent = plan + ' Selected ✓';
+    document.getElementById('planModal').classList.add('active');
+  }
+  document.getElementById('planModal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+  });
+
+  // Toast
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // Booking form
+  function submitBooking() {
+    const name = document.getElementById('book-name').value;
+    const email = document.getElementById('book-email').value;
+    const service = document.getElementById('book-service').value;
+    const brief = document.getElementById('book-brief').value;
+    if (!name || !email || !service || !brief) { showToast('⚠️ Please fill in all required fields'); return; }
+    // To wire up: send to your email/WhatsApp API here
+    showToast('✅ Booking request sent! I\'ll reply within 24 hours.');
+    document.getElementById('book-name').value = '';
+    document.getElementById('book-email').value = '';
+    document.getElementById('book-phone').value = '';
+    document.getElementById('book-service').value = '';
+    document.getElementById('book-budget').value = '';
+    document.getElementById('book-brief').value = '';
+  }
+
+  // Contact form
+  function submitContact() {
+    const name = document.getElementById('c-name').value;
+    const email = document.getElementById('c-email').value;
+    const msg = document.getElementById('c-message').value;
+    if (!name || !email || !msg) { showToast('⚠️ Please fill in all required fields'); return; }
+    showToast('✅ Message sent! Talk soon.');
+    document.getElementById('c-name').value = '';
+    document.getElementById('c-email').value = '';
+    document.getElementById('c-subject').value = '';
+    document.getElementById('c-message').value = '';
+  }
+
+  // Intersection observer for fade-up on non-hero elements
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.work-item, .client-card, .payment-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
