@@ -779,14 +779,7 @@
     </div>
   </div>
 
-  <div style="text-align:center; margin-top:50px">
-    <p style="font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:20px">
-      ↑ REPLACE PLACEHOLDER COLORS WITH YOUR ACTUAL VIDEO THUMBNAILS OR EMBEDS ↑
-    </p>
-    <button class="add-work-btn" onclick="showToast('To add work: replace .work-thumb div with your video embed or image tag')">
-      + ADD MORE WORK
-    </button>
-  </div>
+
 </section>
 
 <!-- CLIENTS -->
@@ -1275,6 +1268,49 @@
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
   });
+
+  // ========= SECURITY =========
+
+  // Disable Right Click
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U (view source), Ctrl+S (save)
+  document.addEventListener('keydown', e => {
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+      (e.ctrlKey && e.key === 'u') ||
+      (e.ctrlKey && e.key === 'U') ||
+      (e.ctrlKey && e.key === 's') ||
+      (e.ctrlKey && e.key === 'S')
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Disable text selection
+  document.addEventListener('selectstart', e => e.preventDefault());
+
+  // Disable drag
+  document.addEventListener('dragstart', e => e.preventDefault());
+
+  // Disable copy
+  document.addEventListener('copy', e => e.preventDefault());
+
+  // Detect DevTools open and warn
+  setInterval(() => {
+    const threshold = 160;
+    if (
+      window.outerWidth - window.innerWidth > threshold ||
+      window.outerHeight - window.innerHeight > threshold
+    ) {
+      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:#ff3c00;font-family:monospace;font-size:24px;text-align:center;">⛔ Access Denied</div>';
+    }
+  }, 1000);
+
 </script>
 </body>
 </html>
