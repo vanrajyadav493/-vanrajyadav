@@ -1213,20 +1213,37 @@
   }
 
   // Booking form
-  function submitBooking() {
+  async function submitBooking() {
     const name = document.getElementById('book-name').value;
     const email = document.getElementById('book-email').value;
+    const phone = document.getElementById('book-phone').value;
     const service = document.getElementById('book-service').value;
+    const budget = document.getElementById('book-budget').value;
+    const deadline = document.getElementById('book-deadline').value;
     const brief = document.getElementById('book-brief').value;
     if (!name || !email || !service || !brief) { showToast('⚠️ Please fill in all required fields'); return; }
-    // To wire up: send to your email/WhatsApp API here
-    showToast('✅ Booking request sent! I\'ll reply within 24 hours.');
-    document.getElementById('book-name').value = '';
-    document.getElementById('book-email').value = '';
-    document.getElementById('book-phone').value = '';
-    document.getElementById('book-service').value = '';
-    document.getElementById('book-budget').value = '';
-    document.getElementById('book-brief').value = '';
+    showToast('⏳ Sending your request...');
+    try {
+      const res = await fetch('https://formspree.io/f/xrevywrw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name, email, phone, service, budget, deadline, brief })
+      });
+      if (res.ok) {
+        showToast('✅ Booking request sent! I will reply within 24 hours.');
+        document.getElementById('book-name').value = '';
+        document.getElementById('book-email').value = '';
+        document.getElementById('book-phone').value = '';
+        document.getElementById('book-service').value = '';
+        document.getElementById('book-budget').value = '';
+        document.getElementById('book-deadline').value = '';
+        document.getElementById('book-brief').value = '';
+      } else {
+        showToast('❌ Something went wrong. Please try again.');
+      }
+    } catch(e) {
+      showToast('❌ Network error. Please try again.');
+    }
   }
 
   // Contact form
