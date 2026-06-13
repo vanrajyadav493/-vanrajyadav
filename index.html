@@ -882,26 +882,26 @@
       </div>
     </div>
 
-    <div class="booking-form">
+    <form class="booking-form" action="https://formspree.io/f/xrevywrw" method="POST">
       <div class="form-title">Send a Brief</div>
       <div class="form-row">
         <div class="form-group">
           <label>Your Name *</label>
-          <input type="text" placeholder="Full name" id="book-name">
+          <input type="text" placeholder="Full name" name="name" required>
         </div>
         <div class="form-group">
           <label>Email *</label>
-          <input type="email" placeholder="your@email.com" id="book-email">
+          <input type="email" placeholder="your@email.com" name="email" required>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label>Phone / WhatsApp</label>
-          <input type="tel" placeholder="+91 87657 63039" id="book-phone">
+          <input type="tel" placeholder="+91 87657 63039" name="phone">
         </div>
         <div class="form-group">
           <label>Service Needed *</label>
-          <select id="book-service">
+          <select name="service" required>
             <option value="">Select service...</option>
             <option>YouTube / Long-Form Editing</option>
             <option>Instagram Reels / Shorts</option>
@@ -917,7 +917,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>Budget Range</label>
-          <select id="book-budget">
+          <select name="budget">
             <option value="">Select budget...</option>
             <option>Under ₹2,000</option>
             <option>₹2,000 – ₹5,000</option>
@@ -928,15 +928,15 @@
         </div>
         <div class="form-group">
           <label>Deadline</label>
-          <input type="date" id="book-deadline">
+          <input type="date" name="deadline">
         </div>
       </div>
       <div class="form-group">
         <label>Project Brief *</label>
-        <textarea placeholder="Describe your project, reference videos, style preferences, number of videos, raw footage duration..." id="book-brief"></textarea>
+        <textarea placeholder="Describe your project, reference videos, style preferences, number of videos, raw footage duration..." name="brief" required></textarea>
       </div>
-      <button class="btn-submit" onclick="submitBooking()">→ SUBMIT BOOKING REQUEST</button>
-    </div>
+      <button type="submit" class="btn-submit">→ SUBMIT BOOKING REQUEST</button>
+    </form>
   </div>
 </section>
 
