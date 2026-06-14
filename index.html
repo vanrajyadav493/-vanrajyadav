@@ -1300,16 +1300,7 @@
   // Disable copy
   document.addEventListener('copy', e => e.preventDefault());
 
-  // Detect DevTools open and warn
-  setInterval(() => {
-    const threshold = 160;
-    if (
-      window.outerWidth - window.innerWidth > threshold ||
-      window.outerHeight - window.innerHeight > threshold
-    ) {
-      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:#ff3c00;font-family:monospace;font-size:24px;text-align:center;">⛔ Access Denied</div>';
-    }
-  }, 1000);
+
 
 </script>
 </body>
