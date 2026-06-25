@@ -1279,6 +1279,7 @@
     const slides = gallery.querySelectorAll('.pw-slide');
     const dotsContainer = gallery.querySelector('.pw-dots');
     let index = 0;
+    let paused = false;
     if (slides.length && dotsContainer) {
       slides.forEach((_, i) => {
         const dot = document.createElement('div');
@@ -1296,8 +1297,19 @@
     }
     gallery._goTo = goTo;
     gallery._getIndex = () => index;
+    // Pause auto-advance while hovering (covers watching a video/click interaction)
+    gallery.addEventListener('mouseenter', () => { paused = true; });
+    gallery.addEventListener('mouseleave', () => { paused = false; });
+    gallery.addEventListener('touchstart', () => { paused = true; }, { passive: true });
     if (slides.length > 1) {
-      setInterval(() => goTo(index + 1), 5000);
+      setInterval(() => {
+        // Never auto-advance away from a slide containing a video (iframe) — only auto-play between image/placeholder slides
+        const currentSlide = slides[index];
+        const hasVideo = currentSlide.querySelector('iframe, video');
+        if (!paused && !hasVideo) {
+          goTo(index + 1);
+        }
+      }, 5000);
     }
   });
   function pwChange(btn, dir) {
