@@ -285,6 +285,38 @@
   .work-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 1px; }
 
   /* Upload placeholder styling */
+  /* Pre-Wedding Carousel Gallery */
+  .pw-gallery { position: relative; overflow: hidden; }
+  .pw-slide {
+    position: absolute; inset: 0;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .pw-slide.active { opacity: 1; pointer-events: auto; }
+  .pw-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(10,10,10,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white; font-size: 22px;
+    width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; z-index: 5;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .pw-nav:hover { background: var(--accent); }
+  .pw-prev { left: 14px; }
+  .pw-next { right: 14px; }
+  .pw-dots {
+    position: absolute; bottom: 14px; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 8px; z-index: 5;
+  }
+  .pw-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    cursor: pointer; transition: background 0.2s, transform 0.2s;
+  }
+  .pw-dot.active { background: var(--accent); transform: scale(1.3); }
+
   .upload-placeholder {
     background: repeating-linear-gradient(
       45deg,
@@ -718,64 +750,153 @@
   <h2 class="section-title">MY<br>WORKS<span style="color:var(--accent)">.</span></h2>
 
   <div class="works-grid">
-    <!-- Item 1 — Large Featured -->
-    <div class="work-item" onclick="openWorkModal('Brand Film — XYZ Studio', 'Commercial brand film with cinematic color grade and dynamic motion graphics. Full production workflow from rough cut to final delivery.', 'Commercial')">
-      <div class="work-thumb">
-        <div class="work-thumb-bg c1"></div>
-        <div class="work-type-badge">🎬 Brand Film</div>
-        <!-- Replace the div below with: <video src="your-video.mp4" controls style="width:100%;height:100%;object-fit:cover"></video> -->
-        <div class="work-play">
-          <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+    <!-- Item 1 — Large Featured — Pre-Wedding Gallery (supports multiple videos) -->
+    <div class="work-item">
+      <div class="work-thumb pw-gallery" data-gallery="pw">
+
+        <!-- SLIDE 1 -->
+        <div class="pw-slide active">
+          <div class="work-thumb-bg c1"></div>
+          <!-- Replace the div above with: <video src="prewedding-1.mp4" controls style="width:100%;height:100%;object-fit:cover"></video> -->
+          <div class="work-play" onclick="event.stopPropagation(); openWorkModal('Pre-Wedding Film — XYZ Couple', 'Cinematic pre-wedding shoot with dreamy color grade and dynamic motion graphics.', 'Pre-Wedding')">
+            <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
         </div>
+
+        <!-- SLIDE 2 -->
+        <div class="pw-slide">
+          <div class="work-thumb-bg c2"></div>
+          <!-- Replace the div above with: <video src="prewedding-2.mp4" controls style="width:100%;height:100%;object-fit:cover"></video> -->
+          <div class="work-play" onclick="event.stopPropagation(); openWorkModal('Pre-Wedding Film — Second Couple', 'Romantic pre-wedding edit with golden-hour color grading and smooth transitions.', 'Pre-Wedding')">
+            <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+
+        <!-- SLIDE 3 (add more slides the same way — just copy this block) -->
+        <div class="pw-slide">
+          <div class="work-thumb-bg c3"></div>
+          <!-- Replace the div above with: <video src="prewedding-3.mp4" controls style="width:100%;height:100%;object-fit:cover"></video> -->
+          <div class="work-play" onclick="event.stopPropagation(); openWorkModal('Pre-Wedding Film — Third Couple', 'Cinematic outdoor pre-wedding shoot with dynamic camera movement and emotional storytelling.', 'Pre-Wedding')">
+            <svg width="16" height="18" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+
+        <div class="work-type-badge">🎬 Pre-Wedding</div>
+
+        <!-- Carousel controls -->
+        <button class="pw-nav pw-prev" onclick="event.stopPropagation(); pwChange(this, -1)">‹</button>
+        <button class="pw-nav pw-next" onclick="event.stopPropagation(); pwChange(this, 1)">›</button>
+        <div class="pw-dots"></div>
       </div>
       <div class="work-info">
-        <div class="work-title">XYZ Studio — Brand Film 2024</div>
-        <div class="work-meta">COMMERCIAL · 4K · COLOR GRADE · MOTION GRAPHICS</div>
+        <div class="work-title">Pre-Wedding Films — Gallery</div>
+        <div class="work-meta">PRE-WEDDING · 4K · COLOR GRADE · CINEMATIC</div>
       </div>
     </div>
 
-    <!-- Item 2 -->
-    <div class="work-item" onclick="openWorkModal('YouTube Series Edit', 'Long-form YouTube content with chapter markers, animated titles, and podcast-style audio mix.', 'YouTube')">
-      <div class="work-thumb">
-        <div class="work-thumb-bg c2"></div>
-        <div class="work-type-badge">📺 YouTube</div>
-        <div class="work-play" style="width:44px;height:44px">
-          <svg width="12" height="14" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+    <!-- Item 2 — Engagement Gallery -->
+    <div class="work-item">
+      <div class="work-thumb pw-gallery" data-gallery="eng">
+        <div class="pw-slide active">
+          <div class="work-thumb-bg c2"></div>
+          <div class="work-play" style="width:44px;height:44px" onclick="event.stopPropagation(); openWorkModal('Engagement Ceremony Edit', 'Cinematic engagement ceremony edit with smooth transitions, animated titles, and emotional music sync.', 'Engagement')">
+            <svg width="12" height="14" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
         </div>
+        <div class="pw-slide">
+          <div class="work-thumb-bg c3"></div>
+          <div class="work-play" style="width:44px;height:44px" onclick="event.stopPropagation(); openWorkModal('Engagement Ceremony Edit 2', 'Another engagement ceremony highlight with smooth transitions and emotional music sync.', 'Engagement')">
+            <svg width="12" height="14" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+        <div class="work-type-badge">💍 Engagement</div>
+        <button class="pw-nav pw-prev" onclick="event.stopPropagation(); pwChange(this, -1)">‹</button>
+        <button class="pw-nav pw-next" onclick="event.stopPropagation(); pwChange(this, 1)">›</button>
+        <div class="pw-dots"></div>
       </div>
       <div class="work-info">
-        <div class="work-title">Creator Series — Episode Pack</div>
-        <div class="work-meta">YOUTUBE · LONG FORM · AUDIO MIX</div>
+        <div class="work-title">Engagement Ceremony Highlights</div>
+        <div class="work-meta">ENGAGEMENT · CINEMATIC · MUSIC SYNC</div>
       </div>
     </div>
 
-    <!-- Item 3 -->
-    <div class="work-item" onclick="openWorkModal('Instagram Reel Package', '15 short-form reels edited for maximum retention with trending audio and text animations.', 'Social Media')">
-      <div class="work-thumb">
-        <div class="work-thumb-bg c3"></div>
-        <div class="work-type-badge">📱 Social Media</div>
-        <div class="work-play" style="width:44px;height:44px">
-          <svg width="12" height="14" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+    <!-- Item 3 — Birthday Gallery -->
+    <div class="work-item">
+      <div class="work-thumb pw-gallery" data-gallery="bday">
+        <div class="pw-slide active">
+          <iframe src="https://www.youtube.com/embed/CaQ38QUPmRg" style="width:100%;height:100%;border:none;position:absolute;inset:0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
+        <div class="pw-slide">
+          <div class="work-thumb-bg c4"></div>
+          <div class="work-play" style="width:44px;height:44px" onclick="event.stopPropagation(); openWorkModal('Birthday Celebration Edit 2', 'Another fun birthday celebration edit with vibrant cuts and playful animations.', 'Birthday')">
+            <svg width="12" height="14" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg>
+          </div>
+        </div>
+        <div class="work-type-badge">🎂 Birthday</div>
+        <button class="pw-nav pw-prev" onclick="event.stopPropagation(); pwChange(this, -1)">‹</button>
+        <button class="pw-nav pw-next" onclick="event.stopPropagation(); pwChange(this, 1)">›</button>
+        <div class="pw-dots"></div>
       </div>
       <div class="work-info">
-        <div class="work-title">Instagram Reels — Fashion Brand</div>
-        <div class="work-meta">REELS · SHORT FORM · 9:16</div>
+        <div class="work-title">Birthday Celebration Highlights</div>
+        <div class="work-meta">BIRTHDAY · LANDSCAPE · 16:9</div>
       </div>
     </div>
 
-    <!-- Items 4, 5, 6 -->
-    <div class="work-item" onclick="openWorkModal('Wedding Highlight Film', 'Cinematic wedding highlight with song-synced cuts and emotional storytelling.', 'Wedding')">
-      <div class="work-thumb"><div class="work-thumb-bg c4"></div><div class="work-type-badge">💍 Wedding</div><div class="work-play" style="width:40px;height:40px"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div></div>
+    <!-- Item 4 — Wedding Gallery -->
+    <div class="work-item">
+      <div class="work-thumb pw-gallery" data-gallery="wed">
+        <div class="pw-slide active">
+          <iframe src="https://www.youtube.com/embed/597_3eedXyw" style="width:100%;height:100%;border:none;position:absolute;inset:0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <div class="pw-slide">
+          <div class="work-thumb-bg c5"></div>
+          <div class="work-play" style="width:40px;height:40px" onclick="event.stopPropagation(); openWorkModal('Wedding Highlight Film 2', 'Another cinematic wedding highlight with song-synced cuts and emotional storytelling.', 'Wedding')"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div>
+        </div>
+        <div class="work-type-badge">💍 Wedding</div>
+        <button class="pw-nav pw-prev" onclick="event.stopPropagation(); pwChange(this, -1)">‹</button>
+        <button class="pw-nav pw-next" onclick="event.stopPropagation(); pwChange(this, 1)">›</button>
+        <div class="pw-dots"></div>
+      </div>
       <div class="work-info"><div class="work-title">Wedding Highlights 2024</div><div class="work-meta">CINEMATIC · 4K · COLOR</div></div>
     </div>
-    <div class="work-item" onclick="openWorkModal('Product Ad — E-Commerce', 'Fast-paced product showcase with 3D text transitions for e-commerce brand launch.', 'Commercial')">
-      <div class="work-thumb"><div class="work-thumb-bg c5"></div><div class="work-type-badge">🛍️ Ad</div><div class="work-play" style="width:40px;height:40px"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div></div>
-      <div class="work-info"><div class="work-title">Product Launch Ad</div><div class="work-meta">COMMERCIAL · MOTION · FAST CUTS</div></div>
+
+    <!-- Item 5 — Album Gallery -->
+    <div class="work-item">
+      <div class="work-thumb pw-gallery" data-gallery="alb">
+        <div class="pw-slide active">
+          <div class="work-thumb-bg c5"></div>
+          <div class="work-play" style="width:40px;height:40px" onclick="event.stopPropagation(); openWorkModal('Wedding Album Design', 'Custom wedding album design with elegant layouts and curated photo sequencing.', 'Album')"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div>
+        </div>
+        <div class="pw-slide">
+          <div class="work-thumb-bg c6"></div>
+          <div class="work-play" style="width:40px;height:40px" onclick="event.stopPropagation(); openWorkModal('Wedding Album Design 2', 'Another custom wedding album design with elegant layouts and curated photo sequencing.', 'Album')"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div>
+        </div>
+        <div class="work-type-badge">📖 Album</div>
+        <button class="pw-nav pw-prev" onclick="event.stopPropagation(); pwChange(this, -1)">‹</button>
+        <button class="pw-nav pw-next" onclick="event.stopPropagation(); pwChange(this, 1)">›</button>
+        <div class="pw-dots"></div>
+      </div>
+      <div class="work-info"><div class="work-title">Wedding Album Design</div><div class="work-meta">ALBUM · DESIGN · LAYOUT</div></div>
     </div>
-    <div class="work-item" onclick="openWorkModal('Music Video Edit', 'Concept music video with synchronized cuts, color manipulation, and VFX overlays.', 'Music')">
-      <div class="work-thumb"><div class="work-thumb-bg c6"></div><div class="work-type-badge">🎵 Music Video</div><div class="work-play" style="width:40px;height:40px"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div></div>
-      <div class="work-info"><div class="work-title">Music Video — Artist Collab</div><div class="work-meta">MUSIC VIDEO · VFX · COLOR GRADE</div></div>
+
+    <!-- Item 6 — Events Gallery -->
+    <div class="work-item">
+      <div class="work-thumb pw-gallery" data-gallery="evt">
+        <div class="pw-slide active">
+          <div class="work-thumb-bg c6"></div>
+          <div class="work-play" style="width:40px;height:40px" onclick="event.stopPropagation(); openWorkModal('Event Highlight Reel', 'High-energy event coverage with synchronized cuts, color grading, and dynamic transitions.', 'Events')"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div>
+        </div>
+        <div class="pw-slide">
+          <div class="work-thumb-bg c1"></div>
+          <div class="work-play" style="width:40px;height:40px" onclick="event.stopPropagation(); openWorkModal('Event Highlight Reel 2', 'Another high-energy event coverage with synchronized cuts and dynamic transitions.', 'Events')"><svg width="10" height="12" viewBox="0 0 16 18"><path d="M0 0L16 9L0 18V0Z"/></svg></div>
+        </div>
+        <div class="work-type-badge">🎉 Events</div>
+        <button class="pw-nav pw-prev" onclick="event.stopPropagation(); pwChange(this, -1)">‹</button>
+        <button class="pw-nav pw-next" onclick="event.stopPropagation(); pwChange(this, 1)">›</button>
+        <div class="pw-dots"></div>
+      </div>
+      <div class="work-info"><div class="work-title">Event Highlight Reel</div><div class="work-meta">EVENTS · COLOR GRADE · COVERAGE</div></div>
     </div>
   </div>
 
@@ -891,7 +1012,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>Phone / WhatsApp</label>
-          <input type="tel" placeholder="+91 87657 63039" name="phone">
+          <input type="tel" placeholder="+91 90054 85138" name="phone">
         </div>
         <div class="form-group">
           <label>Service Needed *</label>
@@ -1027,14 +1148,14 @@
           <div class="contact-icon">📧</div>
           <div>
             <div class="contact-detail-label">Email</div>
-            <div class="contact-detail-val"><a href="mailto:vanrajyadav493@gmail.com">vanrajyadav493@gmail.com</a></div>
+            <div class="contact-detail-val"><a href="mailto:amanviderecording@gmail.com">amanviderecording@gmail.com</a></div>
           </div>
         </li>
         <li>
           <div class="contact-icon">📱</div>
           <div>
             <div class="contact-detail-label">WhatsApp / Phone</div>
-            <div class="contact-detail-val"><a href="https://wa.me/918765763039">+91 87657 63039</a></div>
+            <div class="contact-detail-val"><a href="https://wa.me/919005485138">+91 90054 85138</a></div>
           </div>
         </li>
         <li>
@@ -1076,7 +1197,7 @@
           <svg viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029H23.7zM13 17.549c.086-3.539 3.489-3.539 3.641-1.569H13zm-2.818 6.451H7.293V3.2H13c1.917 0 5.73.691 5.73 4.471 0 1.903-1.049 2.981-2.344 3.64C17.924 11.876 19 13.079 19 15.187c0 4.736-4.765 4.813-5.773 4.813H10.182zm-3.068-8.463H12.7c1.979 0 3.2-.688 3.2-2.478 0-1.912-1.31-2.467-3.342-2.467H7.113v4.945zm0 5.812h5.406c2.126 0 3.73-.647 3.73-2.787 0-2.087-1.637-2.701-3.856-2.701H7.113v5.488z"/></svg>
           Behance
         </a>
-        <a href="https://wa.me/918765763039" target="_blank" class="social-btn" style="border-color:rgba(37,211,102,0.3);color:#25d366">
+        <a href="https://wa.me/919005485138" target="_blank" class="social-btn" style="border-color:rgba(37,211,102,0.3);color:#25d366">
           <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           WhatsApp
         </a>
@@ -1142,7 +1263,7 @@
     <div class="modal-body">
       Great choice! To proceed, please fill out the booking form below with your project details, or reach out directly via WhatsApp or email. I'll send you the payment details after confirming your project scope.
       <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
-        <a href="https://wa.me/918765763039" target="_blank" style="background:var(--accent);color:white;font-family:var(--font-mono);font-size:10px;letter-spacing:2px;padding:12px 20px;text-decoration:none;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)">WHATSAPP ME</a>
+        <a href="https://wa.me/919005485138" target="_blank" style="background:var(--accent);color:white;font-family:var(--font-mono);font-size:10px;letter-spacing:2px;padding:12px 20px;text-decoration:none;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)">WHATSAPP ME</a>
         <button class="btn-submit" style="width:auto;padding:12px 20px;clip-path:none" onclick="document.getElementById('planModal').classList.remove('active'); document.getElementById('booking').scrollIntoView({behavior:'smooth'})">FILL BOOKING FORM</button>
       </div>
     </div>
@@ -1153,6 +1274,37 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  // Multi-Gallery Carousel (works for all work cards)
+  document.querySelectorAll('.pw-gallery').forEach(gallery => {
+    const slides = gallery.querySelectorAll('.pw-slide');
+    const dotsContainer = gallery.querySelector('.pw-dots');
+    let index = 0;
+    if (slides.length && dotsContainer) {
+      slides.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'pw-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = (e) => { e.stopPropagation(); goTo(i); };
+        dotsContainer.appendChild(dot);
+      });
+    }
+    function goTo(i) {
+      slides.forEach(s => s.classList.remove('active'));
+      gallery.querySelectorAll('.pw-dot').forEach(d => d.classList.remove('active'));
+      index = (i + slides.length) % slides.length;
+      slides[index].classList.add('active');
+      gallery.querySelectorAll('.pw-dot')[index].classList.add('active');
+    }
+    gallery._goTo = goTo;
+    gallery._getIndex = () => index;
+    if (slides.length > 1) {
+      setInterval(() => goTo(index + 1), 5000);
+    }
+  });
+  function pwChange(btn, dir) {
+    const gallery = btn.closest('.pw-gallery');
+    if (gallery && gallery._goTo) gallery._goTo(gallery._getIndex() + dir);
+  }
+
   // Custom cursor
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursorRing');
